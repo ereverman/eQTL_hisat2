@@ -5,6 +5,9 @@ I also already downloaded the UCSC genome fasta from http://hgdownload.soe.ucsc.
 ### File information: dm6.fa.gz (14-Oct-2014,10:55,43M)
 This is the only file in this directory to start with
 
+After running the following, I made a wget script to download all of the files at once.
+get_reference_sequences.sh. this also unpacks them.
+
 1. For troubleshooting, open an interactive node and create a conda environment:
 ```
 srun --time=4:00:00 --ntasks=1 --nodes=1 --partition=sixhour --pty /bin/bash -l
@@ -58,6 +61,10 @@ awk '{A[$1]++}END{for(i in A)print i,A[i]}' dmel-all-r6.33_chrArm.txt > dmel-all
 # (3) Copy original "dmel-all-r6.21.gtf" to "dmel-all-r6.21-edit.gtf" using
 cp dmel-all-r6.33.gtf dmel-all-r6.33-edit.gtf
 
+# Made these things into a script.
+
+
+
 # (4) Using information on the names of the unwanted annotations from
 #     "dmel-all-r6.21_chrArmCounts.txt" use find/remove rows in BBEdit
 #     to eliminate from "dmel-all-r6.21-edit.gtf" those annotations
@@ -81,7 +88,10 @@ awk '{A[$1]++}END{for(i in A)print i,A[i]}' dmel-all-r6.33-edit_chrArm.txt > dme
 #     (b) that for those fragments the numbers of elements are the same
 #     between the edited and original file
 
-
+```
+Made this a script: build_hisat_index.sh
+except the python part. for some reason, that script isn't working when submitted on the cluster. I ended up activating the conda environment and running that code and then rerunning the submission script. in the future, make the conda environment, run the python script and then start the submission script to avoid appending to existing results files.
+```
 # Extract splice site positions from edited file (.py script already exists with package)
 hisat2_extract_splice_sites.py dmel-all-r6.33-edit.gtf > dmel-all-r6.33-splicesites.txt
 
@@ -109,3 +119,6 @@ hisat2-build -f -p 8 --ss dmel-all-r6.33-splicesites.txt --exon dmel-all-r6.33-e
 
 ```
 I loaded a small number of files for testing the code.
+
+Questions:
+
